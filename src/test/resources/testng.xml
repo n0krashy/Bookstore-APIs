@@ -2,6 +2,10 @@
     <test name="Book API Tests">
         <classes>
             <class name="bookstore.tests.BookTests"/>
+        </classes>
+    </test>
+    <test name="Author API Tests">
+        <classes>
             <class name="bookstore.tests.AuthorTests"/>
         </classes>
     </test>
