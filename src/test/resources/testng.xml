@@ -1,8 +1,0 @@
-<suite name="Bookstore API Suite">
-    <test name="Book API Tests">
-        <classes>
-            <class name="bookstore.tests.BookTests"/>
-            <class name="bookstore.tests.AuthorTests"/>
-        </classes>
-    </test>
-</suite>
