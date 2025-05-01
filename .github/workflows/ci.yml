@@ -12,8 +12,10 @@ jobs:
           distribution: zulu
           java-version: 17
 
-      - name: Run tests
-        run: ./gradlew clean test
+      - name: Install dependencies and run tests
+        run: |
+          mvn clean install
+          mvn allure:report
 
       - name: Load test report history
         uses: actions/checkout@v3
@@ -37,4 +39,4 @@ jobs:
         with:
           github_token: ${{ secrets.GITHUB_TOKEN }}
           publish_branch: gh-pages
-          publish_dir: allure-history
+          publish_dir: target/site/allure-maven-plugin
