@@ -19,7 +19,9 @@ public class BookTests {
     @Test
     @Description("Test get all books and verifies that response status code is 200")
     public void getAllBooks() {
+        Allure.step("Getting all books");
         Response response = RestAssuredUtils.get(baseUrl);
+        Allure.step("Verifying response status code is 200");
         assertEquals(response.statusCode(), 200);
     }
 
@@ -27,8 +29,11 @@ public class BookTests {
     @Description("Test get a book by ID and verifies that response status code is 200")
     public void getBookById() {
         int bookId = 1;
+        Allure.step("Getting book with ID " + bookId);
         Response response = RestAssuredUtils.get(baseUrl + bookId);
+        Allure.step("Verifying response status code is 200");
         assertEquals(response.statusCode(), 200);
+        Allure.step("Verifying book ID in response");
         assertEquals(response.jsonPath().getInt("id"), bookId);
     }
 
@@ -47,33 +52,37 @@ public class BookTests {
     public void addBook(Book book) {
         Allure.step("Sending POST request to add book");
         Response response = RestAssuredUtils.post(baseUrl, book);
+        Allure.step("Verifying response status code is 200");
         assertEquals(response.statusCode(), 200);
+        Allure.step("Verifying book title in response");
         assertEquals(response.jsonPath().getString("title"), book.title);
     }
 
     @Test(dataProvider = "bookData")
     @Description("Test creates then updates a book and verifies that response status code is 200")
     public void updateBook(Book book) {
-        // First, create the book
+        Allure.step("Creating a new book");
         RestAssuredUtils.post(baseUrl, book);
 
-        // Modify the book title for update test
         book.title = book.title + " Updated";
 
         Allure.step("Updating book with ID " + book.id);
         Response response = RestAssuredUtils.put(baseUrl + book.id, book);
+        Allure.step("Verifying response status code is 200");
         assertEquals(response.statusCode(), 200);
+        Allure.step("Verifying book title in response");
         assertEquals(response.jsonPath().getString("title"), book.title);
     }
 
     @Test(dataProvider = "bookData")
     @Description("Test deletes a book and verifies that response status code is 200")
     public void deleteBook(Book book) {
-        // First, create the book to ensure it exists
+        Allure.step("Creating a new book");
         RestAssuredUtils.post(baseUrl, book);
 
         Allure.step("Deleting book with ID " + book.id);
         Response response = RestAssuredUtils.delete(baseUrl + book.id);
+        Allure.step("Verifying response status code is 200");
         assertEquals(response.statusCode(), 200);
     }
 
