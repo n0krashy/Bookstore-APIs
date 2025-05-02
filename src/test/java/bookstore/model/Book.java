@@ -1,10 +1,13 @@
 package bookstore.model;
 
+import lombok.Data;
+
+@Data
 public class Book {
-    public int id;
-    public String title;
-    public String description;
-    public int pageCount;
-    public String excerpt;
-    public String publishDate;
+    private Integer id;
+    private String title;
+    private String description;
+    private Integer pageCount;
+    private String excerpt;
+    private String publishDate;
 }

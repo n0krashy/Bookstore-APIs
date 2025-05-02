@@ -1,15 +1,23 @@
 package bookstore.model;
 
+import lombok.Data;
+
+@Data
 public class Author {
-    public int id;
-    public int idBook;
-    public String firstName;
-    public String lastName;
+    private Integer id;
+    private Integer idBook;
+    private String firstName;
+    private String lastName;
 
     public Author() {
     }
 
-    public Author(int id, int idBook, String firstName, String lastName) {
+    public Author(Integer id, Integer idBook) {
+        this.id = id;
+        this.idBook = idBook;
+    }
+
+    public Author(Integer id, Integer idBook, String firstName, String lastName) {
         this.id = id;
         this.idBook = idBook;
         this.firstName = firstName;
