@@ -53,3 +53,20 @@ The framework is designed to be modular, allowing for easy addition of new tests
 
 - Please refer to the [testng.xml](src/test/resources/testng.xml) file for the test suite configuration.
 - You can also run tests from the files in the [tests](src/test/java/bookstore/tests) directory.
+
+### Configuration
+
+- The configuration file is located at [src/test/resources/config.properties](src/test/resources/config.properties).
+
+### CI/CD Integration
+
+- The framework is integrated with GitHub Actions for continuous integration and deployment. You can find the workflow
+  file in the [.github/workflows](.github/workflows) directory.
+
+### Reporting
+
+- The framework uses Allure for reporting. After running the tests, you can generate the report using the following
+  command:
+   ```bash
+   mvn allure:report
+   ```
