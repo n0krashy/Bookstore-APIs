@@ -1,0 +1,34 @@
+[
+  {
+    "id": "abc",
+    "title": "Book A",
+    "description": "Sample book",
+    "pageCount": 100,
+    "excerpt": "Excerpt A",
+    "publishDate": "2020-01-01T00:00:00"
+  },
+  {
+    "id": 101,
+    "title": 123,
+    "description": "Invalid title type",
+    "pageCount": 150,
+    "excerpt": "Excerpt B",
+    "publishDate": "2021-05-20T00:00:00"
+  },
+  {
+    "id": 102,
+    "title": "Book C",
+    "description": "Valid description",
+    "pageCount": "many",
+    "excerpt": "Excerpt C",
+    "publishDate": "2022-03-10T00:00:00"
+  },
+  {
+    "id": 103,
+    "title": "Book D",
+    "description": "Valid",
+    "pageCount": 200,
+    "excerpt": "Excerpt D",
+    "publishDate": true
+  }
+]
