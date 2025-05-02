@@ -6,9 +6,13 @@ import bookstore.model.Author;
 import bookstore.utils.RestAssuredUtils;
 import io.qameta.allure.Allure;
 import io.qameta.allure.Description;
+import io.qameta.allure.Issue;
 import io.restassured.response.Response;
 import org.testng.annotations.DataProvider;
 import org.testng.annotations.Test;
+
+import java.util.HashMap;
+import java.util.Map;
 
 import static org.testng.Assert.assertEquals;
 
@@ -37,14 +41,34 @@ public class AuthorTests {
         assertEquals(response.jsonPath().getInt("id"), authorId);
     }
 
-    @DataProvider(name = "authorData")
-    public Object[][] authorData() {
-        Author[] authors = JsonDataReader.readData("data/authorsData.json", Author[].class);
-        Object[][] data = new Object[authors.length][1];
-        for (int i = 0; i < authors.length; i++) {
-            data[i][0] = authors[i];
-        }
-        return data;
+    @Test
+    @Description("Test get an author by invalid ID and verifies that response status code is 404")
+    public void getAuthorByInvalidId() {
+        int invalidAuthorId = 9999;  // assuming this author ID doesn't exist
+        Allure.step("Getting author with invalid ID " + invalidAuthorId);
+        Response response = RestAssuredUtils.get(baseUrl + invalidAuthorId);
+        Allure.step("Verifying response status code is 404");
+        assertEquals(response.statusCode(), 404);
+    }
+
+    @Test
+    @Description("Test adds an author with null required data (id) and verifies that response status code is 400")
+    public void addAuthorWithNoId() {
+        Author invalidAuthor = new Author(null, 12); // missing required field
+        Allure.step("Sending POST request to add an invalid author");
+        Response response = RestAssuredUtils.post(baseUrl, invalidAuthor);
+        Allure.step("Verifying response status code is 400");
+        assertEquals(response.statusCode(), 400);
+    }
+
+    @Test
+    @Description("Test adds an author with null required data (idBook) and verifies that response status code is 400")
+    public void addAuthorWithNoBookId() {
+        Author invalidAuthor = new Author(12, null); // missing required field
+        Allure.step("Sending POST request to add an invalid author");
+        Response response = RestAssuredUtils.post(baseUrl, invalidAuthor);
+        Allure.step("Verifying response status code is 400");
+        assertEquals(response.statusCode(), 400);
     }
 
     @Test(dataProvider = "authorData")
@@ -55,7 +79,7 @@ public class AuthorTests {
         Allure.step("Verifying response status code is 200");
         assertEquals(response.statusCode(), 200);
         Allure.step("Verifying author first name in response");
-        assertEquals(response.jsonPath().getString("firstName"), author.firstName);
+        assertEquals(response.jsonPath().getString("firstName"), author.getFirstName());
     }
 
     @Test(dataProvider = "authorData")
@@ -64,15 +88,30 @@ public class AuthorTests {
         Allure.step("Creating a new author");
         RestAssuredUtils.post(baseUrl, author);
 
-        author.firstName = author.firstName + " Updated";
+        author.setFirstName(author.getFirstName() + " Updated");
 
-        Allure.step("Updating author with ID " + author.id);
-        Response response = RestAssuredUtils.put(baseUrl + author.id, author);
+        Allure.step("Updating author with ID " + author.getId());
+        Response response = RestAssuredUtils.put(baseUrl + author.getId(), author);
         Allure.step("Verifying response status code is 200");
         assertEquals(response.statusCode(), 200);
         Allure.step("Verifying author first name in response");
-        assertEquals(response.jsonPath().getString("firstName"), author.firstName);
+        assertEquals(response.jsonPath().getString("firstName"), author.getFirstName());
     }
+
+    @Test
+    @Description("Test update an author with an invalid ID and verifies that response status code is 404")
+    @Issue("Should return 404 instead of 400 for updating an author with invalid ID as a best practice")
+    public void updateAuthorWithInvalidId() {
+        Author author = new Author();
+        author.setId(9999);  // assuming this author ID doesn't exist
+        author.setFirstName("Updated Author");
+
+        Allure.step("Updating author with invalid ID " + author.getId());
+        Response response = RestAssuredUtils.put(baseUrl + author.getId(), author);
+        Allure.step("Verifying response status code is 404");
+        assertEquals(response.statusCode(), 404);
+    }
+
 
     @Test(dataProvider = "authorData")
     @Description("Test deletes an author and verifies that response status code is 200")
@@ -80,9 +119,44 @@ public class AuthorTests {
         Allure.step("Creating a new author");
         RestAssuredUtils.post(baseUrl, author);
 
-        Allure.step("Deleting author with ID " + author.id);
-        Response response = RestAssuredUtils.delete(baseUrl + author.id);
+        Allure.step("Deleting author with ID " + author.getId());
+        Response response = RestAssuredUtils.delete(baseUrl + author.getId());
         Allure.step("Verifying response status code is 200");
         assertEquals(response.statusCode(), 200);
+    }
+
+    @Test
+    @Description("Test deletes an author with an invalid ID and verifies that response status code is 404")
+    @Issue("Returning 200 instead of 404 for deleting an author with invalid ID")
+    public void deleteAuthorWithInvalidId() {
+        int invalidAuthorId = 9999;  // assuming this author ID doesn't exist
+        Allure.step("Deleting author with invalid ID " + invalidAuthorId);
+        Response response = RestAssuredUtils.delete(baseUrl + invalidAuthorId);
+        Allure.step("Verifying response status code is 404");
+        assertEquals(response.statusCode(), 404);
+    }
+
+    @Test
+    @Description("Test patching an author, expecting 405 status code")
+    public void patchAuthor() {
+        int id = 1;
+        Map<String, Object> patchData = new HashMap<>();
+        patchData.put("firstName", "GhostAuthor");
+
+        Allure.step("Sending PATCH request to author ID " + id);
+        Response response = RestAssuredUtils.patch(baseUrl + id, patchData);
+
+        Allure.step("Verifying response status code is 405");
+        assertEquals(response.statusCode(), 405);
+    }
+
+    @DataProvider(name = "authorData")
+    public Object[][] authorData() {
+        Author[] authors = JsonDataReader.readData("data/authorsData.json", Author[].class);
+        Object[][] data = new Object[authors.length][1];
+        for (int i = 0; i < authors.length; i++) {
+            data[i][0] = authors[i];
+        }
+        return data;
     }
 }
