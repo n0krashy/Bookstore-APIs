@@ -12,6 +12,7 @@ import org.testng.annotations.DataProvider;
 import org.testng.annotations.Test;
 
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 import static org.testng.Assert.assertEquals;
@@ -158,5 +159,34 @@ public class AuthorTests {
             data[i][0] = authors[i];
         }
         return data;
+    }
+
+    @Test(dataProvider = "invalidAuthorJson")
+    @Description("Test author creation with invalid data")
+    public void addAuthorWithInvalidJson(Map<String, Object> invalidAuthor) {
+        Allure.step("Sending POST request with invalid author JSON: " + invalidAuthor);
+        Response response = RestAssuredUtils.post(baseUrl, invalidAuthor);
+        Allure.step("Verifying response status code is 400");
+        assertEquals(response.statusCode(), 400);
+    }
+
+    @Test(dataProvider = "invalidAuthorJson")
+    @Description("Test updating an author with invalid data")
+    public void updateAuthorWithInvalidJson(Map<String, Object> invalidAuthor) {
+        int validAuthorId = 1; // Use a valid ID to reach the endpoint
+        Allure.step("Sending PUT request with invalid author JSON to update ID " + validAuthorId);
+        Response response = RestAssuredUtils.put(baseUrl + validAuthorId, invalidAuthor);
+        Allure.step("Verifying response status code is 400");
+        assertEquals(response.statusCode(), 400);
+    }
+
+    @DataProvider(name = "invalidAuthorJson")
+    public Object[][] invalidAuthorJson() {
+        List<Map<String, Object>> data = JsonDataReader.readInvalidData("data/authorsInvalidData.json");
+        Object[][] result = new Object[data.size()][1];
+        for (int i = 0; i < data.size(); i++) {
+            result[i][0] = data.get(i);
+        }
+        return result;
     }
 }

@@ -12,6 +12,7 @@ import org.testng.annotations.DataProvider;
 import org.testng.annotations.Test;
 
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 import static org.testng.Assert.assertEquals;
@@ -148,6 +149,31 @@ public class BookTests {
 
         Allure.step("Verifying response status code is 405");
         assertEquals(response.statusCode(), 405);
+    }
+
+    @Test(dataProvider = "invalidBookJson")
+    @Description("Test creating a book with invalid data")
+    public void createBookWithInvalidJson(Map<String, Object> invalidBook) {
+        Allure.step("Sending POST request with invalid book JSON");
+        Response response = RestAssuredUtils.post(baseUrl, invalidBook);
+        Allure.step("Verifying response status code is 400");
+        assertEquals(response.statusCode(), 400);
+    }
+
+    @Test(dataProvider = "invalidBookJson")
+    @Description("Test updating a book with invalid data")
+    public void updateBookWithInvalidJson(Map<String, Object> invalidBook) {
+        int validBookId = 1; // Change as needed
+        Allure.step("Sending PUT request with invalid book JSON to update ID " + validBookId);
+        Response response = RestAssuredUtils.put(baseUrl + validBookId, invalidBook);
+        Allure.step("Verifying response status code is 400");
+        assertEquals(response.statusCode(), 400);
+    }
+
+    @DataProvider(name = "invalidBookJson")
+    public Object[][] invalidBookJson() {
+        List<Map<String, Object>> list = JsonDataReader.readInvalidData("data/booksInvalidData.json");
+        return list.stream().map(item -> new Object[]{item}).toArray(Object[][]::new);
     }
 
     @DataProvider(name = "bookData")
