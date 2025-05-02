@@ -65,6 +65,7 @@ The framework is designed to be modular, allowing for easy addition of new tests
 
 ### Reporting
 
+- You can find the Allure report in the link https://n0krashy.github.io/Bookstore-APIs/
 - The framework uses Allure for reporting. After running the tests, you can generate the report using the following
   command:
    ```bash
