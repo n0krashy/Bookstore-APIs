@@ -56,7 +56,7 @@ The framework is designed to be modular, allowing for easy addition of new tests
 
 ### Configuration
 
-- The configuration file is located at [src/test/resources/config.properties](src/test/resources/config.properties).
+- The configuration file is located at [config.properties](src/test/resources/config.properties).
 
 ### CI/CD Integration
 
