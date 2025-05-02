@@ -152,8 +152,8 @@ public class BookTests {
     }
 
     @Test(dataProvider = "invalidBookJson")
-    @Description("Test creating a book with invalid data")
-    public void createBookWithInvalidJson(Map<String, Object> invalidBook) {
+    @Description("Test creating a book with invalid data type")
+    public void createBookWithInvalidDataType(Map<String, Object> invalidBook) {
         Allure.step("Sending POST request with invalid book JSON");
         Response response = RestAssuredUtils.post(baseUrl, invalidBook);
         Allure.step("Verifying response status code is 400");
@@ -161,8 +161,8 @@ public class BookTests {
     }
 
     @Test(dataProvider = "invalidBookJson")
-    @Description("Test updating a book with invalid data")
-    public void updateBookWithInvalidJson(Map<String, Object> invalidBook) {
+    @Description("Test updating a book with invalid data type")
+    public void updateBookWithInvalidDataType(Map<String, Object> invalidBook) {
         int validBookId = 1; // Change as needed
         Allure.step("Sending PUT request with invalid book JSON to update ID " + validBookId);
         Response response = RestAssuredUtils.put(baseUrl + validBookId, invalidBook);
